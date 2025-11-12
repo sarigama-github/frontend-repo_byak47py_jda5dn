@@ -5,6 +5,8 @@ import Register from './components/Auth/Register'
 import Dashboard from './components/Dashboard'
 import VideoSuggest from './components/VideoSuggest'
 import Resume from './components/Resume'
+import DomainRoadmap from './components/DomainRoadmap'
+import Profile from './components/Profile'
 import { AuthProvider, useAuth } from './context/AuthContext'
 
 function Gate() {
@@ -33,8 +35,10 @@ function Gate() {
   return (
     <Routes>
       <Route path="/" element={<Dashboard />} />
+      <Route path="/domain/:domain" element={<DomainRoadmap />} />
       <Route path="/videos/:domain/:stepId" element={<VideoSuggest />} />
       <Route path="/resume" element={<Resume />} />
+      <Route path="/profile" element={<Profile />} />
     </Routes>
   )
 }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { api } from '../lib/api'
+import Navbar from './Navbar'
 
 export default function Resume() {
   const [form, setForm] = useState({ summary: '', skills: [], education: [], experience: [], projects: [] })
@@ -11,7 +12,6 @@ export default function Resume() {
   useEffect(() => { api.getResume().then(setForm) }, [])
 
   const save = async () => {
-    // Basic validations
     if (!form.summary || form.summary.length < 30) return setMessage('Summary must be at least 30 characters')
     if (!form.skills || form.skills.length === 0) return setMessage('Add at least one skill')
     for (const s of form.skills) if (s.length < 2 || s.length > 40) return setMessage('Each skill 2-40 chars')
@@ -24,13 +24,9 @@ export default function Resume() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-xl font-semibold">Resume Builder</h1>
-          <a href="/" className="text-blue-600">Back</a>
-        </div>
-
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
+      <div className="max-w-4xl mx-auto p-6">
         <div className="bg-white p-4 rounded shadow space-y-4">
           <div>
             <label className="block text-sm font-medium mb-1">Summary</label>
@@ -82,4 +78,5 @@ export default function Resume() {
         </div>
       </div>
     </div>
-  )}
+  )
+}

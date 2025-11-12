@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { api } from '../lib/api'
 import { useAuth } from '../context/AuthContext'
+import Navbar from './Navbar'
+import { useNavigate } from 'react-router-dom'
 
 export default function Dashboard() {
-  const { user, logout } = useAuth()
+  const { user } = useAuth()
   const [domains, setDomains] = useState([])
   const [selected, setSelected] = useState('')
   const [roadmap, setRoadmap] = useState([])
   const [progress, setProgress] = useState(null)
   const [message, setMessage] = useState('')
+  const navigate = useNavigate()
 
   useEffect(() => {
     api.domains().then(d => setDomains(d.domains))
@@ -21,6 +24,7 @@ export default function Dashboard() {
     setRoadmap(rm.steps)
     const pr = await api.progress(d)
     setProgress(pr)
+    navigate(`/domain/${encodeURIComponent(d)}`)
   }
 
   const loadProgress = async (d) => {
@@ -49,16 +53,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b px-6 py-4 flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-semibold">Welcome, {user?.first_name}</h1>
-          <p className="text-sm text-gray-500">Choose a domain, follow roadmap, suggest videos, pass assessments.</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <a className="text-blue-600" href="/resume">Resume Builder</a>
-          <button onClick={logout} className="bg-gray-800 text-white px-3 py-1.5 rounded">Logout</button>
-        </div>
-      </header>
+      <Navbar />
 
       <main className="max-w-5xl mx-auto p-6 space-y-6">
         <section className="bg-white p-4 rounded shadow">

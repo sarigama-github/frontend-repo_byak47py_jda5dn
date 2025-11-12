@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { api } from '../lib/api'
-import { useAuth } from '../context/AuthContext'
 import { useParams, Link } from 'react-router-dom'
+import Navbar from './Navbar'
 
 export default function VideoSuggest() {
-  const { user } = useAuth()
   const { domain, stepId } = useParams()
   const [title, setTitle] = useState('')
   const [url, setUrl] = useState('')
@@ -32,11 +31,12 @@ export default function VideoSuggest() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-3xl mx-auto">
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
+      <div className="max-w-3xl mx-auto p-6">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-xl font-semibold">Suggest YouTube videos</h1>
-          <Link to="/" className="text-blue-600">Back</Link>
+          <Link to={`/domain/${encodeURIComponent(domain)}`} className="text-blue-600">Back to Roadmap</Link>
         </div>
         <p className="text-sm text-gray-600 mb-4">Domain: {domain} · Step: {stepId}</p>
         <form onSubmit={submit} className="bg-white p-4 rounded shadow space-y-3">
