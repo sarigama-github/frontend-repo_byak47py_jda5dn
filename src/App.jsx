@@ -1,28 +1,48 @@
-import { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { Routes, Route, useNavigate } from 'react-router-dom'
+import Login from './components/Auth/Login'
+import Register from './components/Auth/Register'
+import Dashboard from './components/Dashboard'
+import VideoSuggest from './components/VideoSuggest'
+import Resume from './components/Resume'
+import { AuthProvider, useAuth } from './context/AuthContext'
 
-function App() {
-  const [count, setCount] = useState(0)
+function Gate() {
+  const { user, loading } = useAuth()
+  const [mode, setMode] = useState('login')
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!loading && user) navigate('/')
+  }, [user, loading])
+
+  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center p-6">
+        {mode === 'login' ? (
+          <Login onSwitch={() => setMode('register')} />
+        ) : (
+          <Register onSwitch={() => setMode('login')} onSuccess={() => setMode('login')} />
+        )}
+      </div>
+    )
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">
-          Vibe Coding Platform
-        </h1>
-        <p className="text-gray-600 mb-6">
-          Your AI-powered development environment
-        </p>
-        <div className="text-center">
-          <button
-            onClick={() => setCount(count + 1)}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
-          >
-            Count is {count}
-          </button>
-        </div>
-      </div>
-    </div>
+    <Routes>
+      <Route path="/" element={<Dashboard />} />
+      <Route path="/videos/:domain/:stepId" element={<VideoSuggest />} />
+      <Route path="/resume" element={<Resume />} />
+    </Routes>
   )
 }
 
-export default App
+export default function App() {
+  return (
+    <AuthProvider>
+      <Gate />
+    </AuthProvider>
+  )
+}
